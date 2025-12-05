@@ -23,7 +23,7 @@ const Customize2 = () => {
             }else{
                 formData.append('imageUrl',selectedImage)
             }
-            const result = await axios.post(`${serverUrl}/api/user/update`,formData,{withCredentials:true})
+            const result = await axios.post(`https://virtual-assistant-teal.vercel.app/api/user/update`,formData,{withCredentials:true})
             setLoading(false)
             console.log(result.data)
             setUserData(result.data)
