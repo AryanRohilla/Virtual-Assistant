@@ -12,7 +12,7 @@ const app = express()
 app.set('trust proxy',1);
 
 app.use(cors({
-    origin:'https://virtual-assistant-jao2.vercel.app'
+    origin:'http://localhost:5173'
     ,
     credentials: true,
 }))
