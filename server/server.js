@@ -10,7 +10,8 @@ dotenv.config()
 
 const app = express()
 app.use(cors({
-    origin:'http://localhost:5173',
+    origin:'https://virtual-assistant-jao2.vercel.app',
+
     credentials: true,
 }))
 const PORT=process.env.PORT || 5000
