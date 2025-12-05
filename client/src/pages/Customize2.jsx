@@ -30,7 +30,7 @@ const Customize2 = () => {
             navigate('/')
         } catch (error) {
             setLoading(false)
-            console.log(error)
+            console.log("Update error:", error.response?.data || error.message);
         }
     }
 
