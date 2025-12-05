@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser'
 import authRouter from './routes/authRoutes.js'
 import cors from 'cors'
 import userRouter from './routes/userRoutes.js'
-dotenv.config()
+
 
 const app = express()
 app.set('trust proxy',1);
