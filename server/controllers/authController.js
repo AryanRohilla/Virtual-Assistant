@@ -42,6 +42,7 @@ const signUp = async(req, res)=>{
 const Login = async(req, res)=>{
     try {
         const {email, password} = req.body;
+        console.log("Login request for:", email);
 
         const user = await User.findOne({email})
         if(!user){
@@ -56,12 +57,14 @@ const Login = async(req, res)=>{
 
         const token = await genToken(user._id)
 
+        const isProd = process.env.NODE_ENV === "production";
+
         res.cookie("token",token,{
             httpOnly:true,
             maxAge:7*24*60*60*1000,
-            sameSite:"strict",
-            secure:false
-        })
+            sameSite:isProd ? "none" : "lax",
+            secure:isProd,
+        });
 
         return res.status(200).json(user)
 
