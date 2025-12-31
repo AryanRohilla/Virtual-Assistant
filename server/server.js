@@ -36,6 +36,20 @@ app.get('/', (req, res) => {
   res.send('Virtual Assistant backend is running ✅');
 });
 
+// Global error handler middleware
+app.use((err, req, res, next) => {
+    console.error("Unhandled error:", err);
+    res.status(err.status || 500).json({
+        message: err.message || 'Internal server error',
+        error: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
+});
+
+// 404 handler
+app.use((req, res) => {
+    res.status(404).json({ message: 'Route not found' });
+});
+
 // For Vercel serverless functions
 export default app;
 

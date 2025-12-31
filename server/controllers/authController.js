@@ -21,7 +21,7 @@ const signUp = async(req, res)=>{
             name,password:hashedPassword,email
         })
 
-        const token = await genToken(user._id)
+        const token = genToken(user._id)
 
         const isProd = process.env.NODE_ENV === "production";
 
@@ -36,7 +36,16 @@ const signUp = async(req, res)=>{
 
     } catch (error) {
         console.error("Sign up error:", error);
-        return res.status(500).json({message:`sign up error: ${error.message || error}`})
+        const errorMessage = error.message || String(error);
+        console.error("Error details:", {
+            message: errorMessage,
+            stack: error.stack,
+            name: error.name
+        });
+        return res.status(500).json({
+            message: `sign up error: ${errorMessage}`,
+            error: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+        })
     }
 }
 
@@ -56,7 +65,7 @@ const Login = async(req, res)=>{
             return res.status(400).json({message:"incorrect password"})
         }
 
-        const token = await genToken(user._id)
+        const token = genToken(user._id)
 
         const isProd = process.env.NODE_ENV === "production";
 
@@ -71,7 +80,16 @@ const Login = async(req, res)=>{
 
     } catch (error) {
         console.error("Login error:", error);
-        return res.status(500).json({message:`login error: ${error.message || error}`})
+        const errorMessage = error.message || String(error);
+        console.error("Error details:", {
+            message: errorMessage,
+            stack: error.stack,
+            name: error.name
+        });
+        return res.status(500).json({
+            message: `login error: ${errorMessage}`,
+            error: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+        })
     }
 }
 
