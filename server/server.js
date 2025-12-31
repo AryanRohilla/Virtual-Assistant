@@ -13,8 +13,12 @@ app.set('trust proxy',1);
 
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
-        ? process.env.CLIENT_URL || 'https://virtual-assistant-teal.vercel.app'
-        : ['http://localhost:5173', 'https://virtual-assistant-8heq.vercel.app', 'http://localhost:3000'],
+        ? [
+            'https://virtual-assistant-teal.vercel.app',
+            'https://virtual-assistant-8heq.vercel.app',
+            process.env.CLIENT_URL
+          ].filter(Boolean) // Remove undefined values
+        : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'],
     credentials: true,
 }))
 const PORT=process.env.PORT || 5000
