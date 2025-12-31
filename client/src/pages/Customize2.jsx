@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { userDataContext } from '../context/UserContext.jsx';
+import { userDataContext } from '../context/userContext';
 import axios from 'axios'
 import { MdKeyboardBackspace } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +38,7 @@ const Customize2 = () => {
     <div className='w-full h-[100vh] bg-gradient-to-t from-[black] to-[#030353] flex justify-center items-center flex-col p-[20px] relative'>
         <MdKeyboardBackspace className='absolute top-[30px] left-[30px] text-white w-[25px] h-[25px] cursor-pointer' onClick={()=>navigate('/customize')}/>
 
-        <h1 className='text-white mb-[40px] text-[30]px text-center' >Enter Your <span>Assistant Name</span></h1>
+        <h1 className='text-white mb-[40px] text-[30px] text-center' >Enter Your <span>Assistant Name</span></h1>
 
         <input type="text" placeholder='Eg. Jarvis' className='w-full max-w-[600px] h-[60px] outline-none border-2 border-white bg-transparent text-white placeholder-gray-300 px-[20px] py-[10px] rounded-full text-[18px]'required onChange={(e)=>setAssistantName(e.target.value)} value={AssistantName}/>
 

@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useRef } from 'react'
 import Card from '../components/Card'
 import image1 from '../assets/image1.png'
 import image2 from '../assets/image2.jpg'
@@ -8,13 +8,13 @@ import image5 from '../assets/image5.png'
 import image6 from '../assets/image6.jpeg'
 import image7 from '../assets/image7.jpeg'
 import {RiImageAddLine} from 'react-icons/ri'
-import { userDataContext } from '../context/UserContext.jsx'
+import { userDataContext } from '../context/userContext';
 import { useNavigate } from 'react-router-dom'
 import { MdKeyboardBackspace } from 'react-icons/md';
 
 const Customize = () => {
     
-    const {serverUrl, userData, setUserData, backendImage, setBackendImage, frontendImage, setFrontendImage, selectedImage, setSelectedImage} = useContext(userDataContext);
+    const { setBackendImage, frontendImage, setFrontendImage, selectedImage, setSelectedImage} = useContext(userDataContext);
     const inputImage = useRef()
     const navigate = useNavigate()
 

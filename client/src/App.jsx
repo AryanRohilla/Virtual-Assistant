@@ -3,12 +3,12 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
 import Customize from './pages/Customize'
-import { userDataContext } from './context/UserContext.jsx'
+import { userDataContext } from './context/userContext'
 import Home from './pages/Home'
 import Customize2 from './pages/Customize2'
 
 const App = () => {
-  const {userData, setUserData} = useContext(userDataContext);  
+  const {userData} = useContext(userDataContext);  
   return (
     <Routes>
       <Route path='/' element={(userData?.AssistantImage && userData?.AssistantName)? <Home/>:<Navigate to={"/customize"}/>}/>

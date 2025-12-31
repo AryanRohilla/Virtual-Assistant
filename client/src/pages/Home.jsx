@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { userDataContext } from '../context/UserContext.jsx'
+import { userDataContext} from '../context/userContext'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import aiImg from '../assets/ai.gif'
@@ -11,22 +11,22 @@ const Home = () => {
 
     const {userData, setUserData, serverUrl, getGeminiResponse} = useContext(userDataContext)
     const navigate = useNavigate()
-    const [listening, setListening] = useState(false)
+    const [, setListening] = useState(false)
     const [userText, setUserText]= useState("")
     const [aiText,setAiText]=useState("")
     const isRecognizingRef=useRef(false)
     const isSpeakingRef = useRef(false)
     const recognitionRef = useRef(null)
-    const synth = window.speechSynthesis
+    // const synth = window.speechSynthesis
     const [ham,setHam] = useState(false)
 
-    const handleLogOut=async()=>{
+    const handleLogOut = async () => {
         try {
-            const result = await axios.get(`${serverUrl}/api/auth/logout`,{withCredentials:true})
-            setUserData(null)
-            navigate("/signin")
+            await axios.get(`${serverUrl}/api/auth/logout`, { withCredentials: true });
+            setUserData(null);
+            navigate("/signin");
         } catch (error) {
-            setUserData(null)
+            setUserData(null);
             console.log(error)
         }
     }
@@ -105,6 +105,12 @@ const Home = () => {
         }
         if(type === 'facebook_open'){
             window.open(`https://www.facebook.com/`,'_blank');
+        }
+        if(type === 'twitter_open'){
+            window.open(`https://www.twitter.com/`,'_blank');
+        }
+        if(type === 'github_open'){
+            window.open(`https://www.github.com/`,'_blank');
         }
         if(type === 'weather_show'){
 
@@ -219,9 +225,11 @@ const Home = () => {
         }
     }
 
-        const greeting = new SpeechSynthesisUtterance(`Hello ${userData.name}, what can I help you with`);
-        greeting.lang='hi-IN'
-        window.speechSynthesis.speak(greeting);
+        if(userData?.name){
+            const greeting = new SpeechSynthesisUtterance(`Hello ${userData.name}, what can I help you with`);
+            greeting.lang='hi-IN'
+            window.speechSynthesis.speak(greeting);
+        }
 
     return ()=>{
         isMounted=false;
@@ -251,8 +259,8 @@ const Home = () => {
         <h1 className='text-white font-semibold text-[19px]'>History</h1>
 
         <div className='w-full h-[400px] gap-[20px] overflow-y-auto flex flex-col'>
-            {userData.history?.map((his)=>(
-                <span className='text-gray-200 text-[18px] truncate'>{his}</span>
+            {userData.history?.map((his, idx)=>(
+                <span key={idx} className='text-gray-200 text-[18px] truncate'>{his}</span>
             ))}
         </div>
 

@@ -32,7 +32,7 @@ const geminiResponse = async(command, AssistantName, userName)=>{
         - "facebook_open": if user wants to open Facebook.
         - "twitter_open": if user wants to open Twitter.
         - "github_open": if user wants to open GitHub.
-        - "weather-show": if user wants to see weather information.
+        - "weather_show": if user wants to see weather information.
         - "get_time": if user asks for current time.
         - "get_date": if user asks for today's date.
         - "get_day": if user asks what day it is.

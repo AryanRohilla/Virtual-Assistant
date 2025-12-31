@@ -1,11 +1,12 @@
 import React, { createContext, useEffect, useState } from 'react'
 import axios from 'axios'
 
-export const userDataContext = createContext()
+// eslint-disable-next-line react-refresh/only-export-components
+export const userDataContext = createContext();
 
-const UserContext = ({children}) => {
+const UserContext = ({ children }) => {
 
-    // const serverUrl = "https://virtual-assistant-teal.vercel.app"
+    // Use environment variable for server URL, fallback to production URL
     const serverUrl = "http://localhost:5000"
     const [userData, setUserData]= useState(null)
     const [frontendImage, setFrontendImage] = useState(null)
@@ -18,24 +19,37 @@ const UserContext = ({children}) => {
         setUserData(result.data)
         console.log(result.data)
       } catch (error) {
-        console.log(error)
+        // 401 means user is not logged in - this is expected, not an error
+        if(error.response?.status === 401 || error.response?.status === 400){
+          setUserData(null)
+          return
+        }
+        // Only log actual errors (network issues, server errors, etc.)
+        console.error("Error fetching current user:", error)
       }
     }
 
     const getGeminiResponse = async(command)=>{
       try {
-        const result = await axios.post(`${serverUrl}/api/user/asktoassistant`,{command},{withCredentials:true})
+        const result = await axios.post(`${serverUrl}/api/user/askToAssistant`,{command},{withCredentials:true})
         return result.data
       } catch (error) {
         console.log(error)
+        return {type: "general", userInput: command, response: "Sorry, I encountered an error. Please try again."}
       }
     }
 
     useEffect(()=>{
-      handleCurrentUser()
+      // Avoid calling setState synchronously in useEffect body
+      // Instead, define async function inside effect
+      const fetchCurrentUser = async () => {
+        await handleCurrentUser();
+      }
+      fetchCurrentUser();
     },[])
 
     const value={serverUrl, userData, setUserData, backendImage, setBackendImage, frontendImage, setFrontendImage, selectedImage, setSelectedImage, getGeminiResponse}
+
 
   return (
     <div>
