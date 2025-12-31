@@ -39,15 +39,19 @@ connectDb()
 
 // Middleware to ensure database is connected (before routes)
 app.use(async (req, res, next) => {
+    // Check if connection is ready (1 = connected)
     if (mongoose.connection.readyState !== 1) {
         try {
+            console.log("Database not connected, attempting connection...");
             await connectDb();
             dbConnected = true;
+            console.log("Database connection established in middleware");
         } catch (error) {
             console.error("Database connection error in middleware:", error);
+            const errorMessage = error.message || "Unknown database error";
             return res.status(500).json({
-                message: "Database connection failed. Please check MONGODB_URL environment variable.",
-                error: process.env.NODE_ENV === 'development' ? error.message : undefined
+                message: `Database connection failed: ${errorMessage}. Please check MONGODB_URL environment variable.`,
+                error: process.env.NODE_ENV === 'development' ? error.stack : undefined
             });
         }
     }

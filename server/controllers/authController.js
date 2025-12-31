@@ -1,9 +1,17 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs"
 import genToken from '../config/token.js'
+import mongoose from 'mongoose'
 
 const signUp = async(req, res)=>{
     try {
+        // Check database connection before operations
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(500).json({
+                message: "Database not connected. Please try again in a moment."
+            });
+        }
+
         const {name,email, password} = req.body;
 
         const existEmail = await User.findOne({email})
@@ -51,6 +59,13 @@ const signUp = async(req, res)=>{
 
 const Login = async(req, res)=>{
     try {
+        // Check database connection before operations
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(500).json({
+                message: "Database not connected. Please try again in a moment."
+            });
+        }
+
         const {email, password} = req.body;
         console.log("Login request for:", email);
 
