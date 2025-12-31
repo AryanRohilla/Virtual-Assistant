@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config() 
+import mongoose from 'mongoose'
 import connectDb from './config/db.js'
 import cookieParser from 'cookie-parser'
 import authRouter from './routes/authRoutes.js'
@@ -24,13 +25,37 @@ app.use(cors({
 const PORT=process.env.PORT || 5000
 app.use(express.json())
 app.use(cookieParser())
-app.use("/api/auth",authRouter)
-app.use("/api/user", userRouter)
 
 // Connect to database on startup (for both local and serverless)
-connectDb().catch(err => {
-    console.error("Failed to connect to database:", err);
+let dbConnected = false;
+connectDb()
+    .then(() => {
+        dbConnected = true;
+        console.log("Database connected successfully");
+    })
+    .catch(err => {
+        console.error("Failed to connect to database:", err);
+    });
+
+// Middleware to ensure database is connected (before routes)
+app.use(async (req, res, next) => {
+    if (mongoose.connection.readyState !== 1) {
+        try {
+            await connectDb();
+            dbConnected = true;
+        } catch (error) {
+            console.error("Database connection error in middleware:", error);
+            return res.status(500).json({
+                message: "Database connection failed. Please check MONGODB_URL environment variable.",
+                error: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
+        }
+    }
+    next();
 });
+
+app.use("/api/auth",authRouter)
+app.use("/api/user", userRouter)
 
 app.get('/', (req, res) => {
   res.send('Virtual Assistant backend is running ✅');
@@ -50,12 +75,14 @@ app.use((req, res) => {
     res.status(404).json({ message: 'Route not found' });
 });
 
-// For Vercel serverless functions
-export default app;
+// For Vercel serverless functions - export as handler
+const handler = app;
+export default handler;
 
 // For local development
 if(process.env.NODE_ENV !== 'production' || !process.env.VERCEL){
     app.listen(PORT,()=>{
+        connectDb()
         console.log(`Server is running on port ${PORT}`)
     })
 }

@@ -28,10 +28,11 @@ const SignUp = () => {
             setLoading(false)
             navigate('/customize')
         } catch (error) {
-            console.log(error);
+            console.error("SignUp error:", error);
+            console.error("Error response:", error.response?.data);
             setUserData(null)
             setLoading(false)
-            setErr(error.response?.data?.message || "An error occurred. Please try again.")
+            setErr(error.response?.data?.message || error.message || "An error occurred. Please try again.")
         }
     }
 
