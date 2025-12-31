@@ -27,11 +27,21 @@ app.use(cookieParser())
 app.use("/api/auth",authRouter)
 app.use("/api/user", userRouter)
 
+// Connect to database on startup (for both local and serverless)
+connectDb().catch(err => {
+    console.error("Failed to connect to database:", err);
+});
+
 app.get('/', (req, res) => {
   res.send('Virtual Assistant backend is running ✅');
 });
 
-app.listen(PORT,()=>{
-    connectDb()
-    console.log(`Server is running on port ${PORT}`)
-})
+// For Vercel serverless functions
+export default app;
+
+// For local development
+if(process.env.NODE_ENV !== 'production' || !process.env.VERCEL){
+    app.listen(PORT,()=>{
+        console.log(`Server is running on port ${PORT}`)
+    })
+}
